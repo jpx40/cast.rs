@@ -160,10 +160,10 @@ macro_rules! fns {
         $(
             /// Checked cast function
             #[inline]
-            pub fn $ty<T>(x: T) -> <$ty as From<T>>::Output
+            pub fn $ty<T>(x: T) -> <$ty as From<T>>::T
                 where $ty: From<T>
             {
-                <$ty as From<T>>::cast(x)
+                <$ty as From<T>>::cast(x).unwrap()
             }
          )+
     }
