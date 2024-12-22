@@ -160,7 +160,7 @@ macro_rules! fns {
         $(
             /// Checked cast function
             #[inline]
-            pub fn $ty<T>(x: T) -> <$ty as From<T>>::T
+            pub fn $ty<T>(x: T) -> <$ty as From<T>>::$ty
                 where $ty: From<T>
             {
                  if let Ok(i)  = <$ty as From<T>>::cast(x) {
