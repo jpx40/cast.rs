@@ -197,9 +197,11 @@ macro_rules! half_promotion {
         $(
             $(
                 impl From<$src> for $dst {
+                    cfg_if::cfg_if! {
+                if cfg_attr(feature="save") {
                     type Output = Result<$dst, Error>;
 
-                    #[inline]
+                        #[inline]
                     fn cast(src: $src) -> Self::Output {
                         if src < 0 {
                             Err(Error::Underflow)
@@ -207,6 +209,23 @@ macro_rules! half_promotion {
                             Ok(src as $dst)
                         }
                     }
+                } else {
+                    type Output = $dst;
+                    #[inline]
+                    fn cast(src: $src) -> Self::Output {
+                        if src < 0 {
+                 if cfg_attr(feature="panic") {
+                        panic!("Underflow")
+                 } else {
+                     0
+                 }
+                        } else {
+                            src as $dst
+                        }
+                    }
+                }
+                    }
+                
                 }
             )+
         )+
@@ -219,11 +238,12 @@ macro_rules! from_unsigned {
         $(
             $(
                 impl From<$src> for $dst {
-                    type Output = Result<$dst, Error>;
 
-                    #[inline]
+                                   cfg_if::cfg_if! {
+                if cfg_attr(feature="save") {
+                    type Output = Result<$dst, Error>;
+                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                        use core::$dst;
 
                         if src > $dst::MAX as $src {
                             Err(Error::Overflow)
@@ -231,6 +251,24 @@ macro_rules! from_unsigned {
                             Ok(src as $dst)
                         }
                     }
+                } else {
+                    type Output = $dst;
+                    #[inline]
+                    fn cast(src: $src) -> Self::Output {
+                        if src > $dst::MAX as $src {
+                 if cfg_attr(feature="panic") {
+                        panic!("Overflow")
+                 } else {
+                      $dst::MAX
+                 }
+                        } else {
+                            src as $dst
+                        }
+                    }
+                }
+                    }
+                    
+                   
                 }
             )+
         )+
@@ -243,20 +281,37 @@ macro_rules! from_signed {
         $(
             $(
                 impl From<$src> for $dst {
+                                   cfg_if::cfg_if! {
+                if cfg_attr(feature="save") {
                     type Output = Result<$dst, Error>;
+                     #[inline]
+                    fn cast(src: $src) -> Self::Output {
 
+                        if src > $dst::MAX as $src {
+                            Err(Error::Overflow)
+                        } else {
+                            Ok(src as $dst)
+                        }
+                    }
+                } else {
+                    type Output = $dst;
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                        use core::$dst;
-
-                        Err(if src < $dst::MIN as $src {
-                            Error::Underflow
-                        } else if src > $dst::MAX as $src {
-                            Error::Overflow
+                        if src > $dst::MAX as $src {
+                 if cfg_attr(feature="panic") {
+                        panic!("Overflow")
+                 } else {
+                      $dst::MAX
+                 }
                         } else {
-                            return Ok(src as $dst);
-                        })
+                            src as $dst
+                        }
                     }
+                }
+                    }
+
+                    
+                 23ff
                 }
             )+
         )+
