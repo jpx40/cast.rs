@@ -163,7 +163,11 @@ macro_rules! fns {
             pub fn $ty<T>(x: T) -> <$ty as From<T>>::T
                 where $ty: From<T>
             {
-                <$ty as From<T>>::cast(x).unwrap()
+                 if let Ok(i)  = <$ty as From<T>>::cast(x) {
+                     return i;
+                 } else {
+                     panic!("failed to cast Number");
+                 }
             }
          )+
     }
