@@ -197,14 +197,14 @@ macro_rules! half_promotion {
         $(
             $(
                 impl From<$src> for $dst {
-                    type Output = Result<$dst, Error>;
+                    type Output = $dst;
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
                         if src < 0 {
-                            Err(Error::Underflow)
+                            0
                         } else {
-                            Ok(src as $dst)
+                        src as $dst
                         }
                     }
                 }
@@ -219,16 +219,16 @@ macro_rules! from_unsigned {
         $(
             $(
                 impl From<$src> for $dst {
-                    type Output = Result<$dst, Error>;
+                    type Output = $dst;
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
                         use core::$dst;
 
                         if src > $dst::MAX as $src {
-                            Err(Error::Overflow)
+                         $dst::MAX
                         } else {
-                            Ok(src as $dst)
+                           src as $dst
                         }
                     }
                 }
@@ -243,18 +243,18 @@ macro_rules! from_signed {
         $(
             $(
                 impl From<$src> for $dst {
-                    type Output = Result<$dst, Error>;
+                    type Output =$dst;
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
                         use core::$dst;
 
                         Err(if src < $dst::MIN as $src {
-                            Error::Underflow
+                             $dst::MIN
                         } else if src > $dst::MAX as $src {
-                            Error::Overflow
+                                $dst::MAX
                         } else {
-                            return Ok(src as $dst);
+                            return src as $dst;
                         })
                     }
                 }
@@ -269,13 +269,13 @@ macro_rules! from_float {
         $(
             $(
                 impl From<$src> for $dst {
-                    type Output = Result<$dst, Error>;
+                    type Output = $dst;
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
                         use core::{$dst, $src};
 
-                        Err(if src != src {
+                      let err ==  Err(if src != src {
                             Error::NaN
                         } else if src == $src::INFINITY ||
                             src == $src::NEG_INFINITY {
@@ -304,13 +304,16 @@ macro_rules! from_float {
                             if src <= -1.0 {
                                 Error::Underflow
                             } else {
-                                return Ok(src as $dst);
+                                return src as $dst;
                             }
                         } else if src < $dst::MIN as $src {
                             Error::Underflow
                         } else  {
-                            return Ok(src as $dst);
-                        })
+                            return src as $dst;
+                        });
+
+                        panic!("failed to cast Number")
+                        return 0;
                     }
                 }
             )+
@@ -325,7 +328,7 @@ macro_rules! from_float_dst {
         $(
             $(
                 impl From<$src> for $dst {
-                     type Output = Result<$dst, Error>;
+                     type Output = $dst;
 
                     #[inline]
                     #[allow(unused_comparisons)]
