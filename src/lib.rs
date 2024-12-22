@@ -1,3 +1,5 @@
+#![feature(more_qualified_paths)]
+
 //! Ergonomic, checked cast functions for primitive types
 //!
 //! This crate provides one checked cast function for each numeric primitive.
