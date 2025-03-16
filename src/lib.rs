@@ -282,7 +282,7 @@ macro_rules! from_float_dst {
                     #[allow(unused_comparisons)]
                     fn cast(src: $src) -> Self::Output {
                    
-                        src as $dst;
+                        src as $dst
                         
                     }
                 }
