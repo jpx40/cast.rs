@@ -223,7 +223,7 @@ macro_rules! from_unsigned {
 
                     src as $dst
                         }
-                    }
+                    
                 }
             )+
         )+
