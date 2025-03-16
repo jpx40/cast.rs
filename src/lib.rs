@@ -220,7 +220,6 @@ macro_rules! from_unsigned {
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                        use core::$dst;
 
                     src as $dst
                         }
@@ -241,7 +240,6 @@ macro_rules! from_signed {
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                        use core::$dst;
                         src as $dst
                         
                     }
@@ -261,7 +259,6 @@ macro_rules! from_float {
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                        use core::{$dst, $src};
 
            src as $dst
                        
