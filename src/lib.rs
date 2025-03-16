@@ -201,7 +201,7 @@ macro_rules! half_promotion {
 
                     #[inline]
                     fn cast(src: $src) -> Self::Output {
-                `    src as $dst
+                   src as $dst
                         }
                     
                 }
